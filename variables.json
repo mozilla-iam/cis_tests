@@ -1,0 +1,18 @@
+{
+  "ldap_user": {
+    "email": "",
+    "password": "",
+    "secret_seed": ""
+    },
+  "passwordless": {
+    "email": ""
+    },
+  "counter_API_endpoint": "",
+  "token": {
+    "client_id": "",
+    "client_secret": "",
+    "audience": "",
+    "url": "",
+    "api": ""
+  }
+}
