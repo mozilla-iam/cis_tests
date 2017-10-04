@@ -66,7 +66,7 @@ class TestMozilliansProfileUpdates:
         user_logs = requests.get(api, headers={'Authorization': 'Bearer {0}'.format(conftest.access_token(token))})
         assert primary_email == json.loads(user_logs.content)['app_metadata']['emails'][0]['value']
         a = len(json.loads(user_logs.content)['app_metadata']['emails'])
-        assert new_email == json.loads(user_logs.content)['app_metadata']['emails'][a-1]['value']
+        assert new_email == json.loads(user_logs.content)['app_metadata']['emails'][a - 1]['value']
 
         # Cleanup
         profile_page.delete_secondary_email(new_email)
