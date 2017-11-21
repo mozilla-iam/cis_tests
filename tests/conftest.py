@@ -34,6 +34,12 @@ def passcode(secret_seed, counter):
 
 
 @pytest.fixture
+def totp_passcode(secret_seed):
+    totp = pyotp.TOTP(secret_seed)
+    return totp.now()
+
+
+@pytest.fixture
 def token(variables):
     return variables['token']
 
@@ -79,3 +85,13 @@ def login_link(username):
     for link in mail_content:
         if 'passwordless/verify_redirect' in link:
             return link
+
+
+@pytest.fixture
+def passwordless_identity(variables):
+    return variables['passwordless_identity']
+
+
+@pytest.fixture
+def github_identity(variables):
+    return variables['github_identity']

@@ -58,7 +58,7 @@ class TestMozilliansProfileUpdates:
         profile_page = settings_page.profile
         primary_email = profile_page.primary_email
         new_email = new_user['email']
-        profile_page.add_email(new_email)
+        profile_page.add_email_identity(new_email)
         profile_page.click_update_emails()
         assert new_email in profile_page.secondary_email_address
         time.sleep(8)
@@ -113,3 +113,24 @@ class TestMozilliansProfileUpdates:
         # Cleanup
         groups_page.check_delete_aknowledgement()
         groups_page.click_delete_group()
+
+    @pytest.mark.nondestructive
+    def test_upgrade_from_passwordless_to_github(self, base_url, selenium, passwordless_identity, github_identity, token):
+        home_page = Homepage(base_url, selenium)
+        home_page.login_with_email(passwordless_identity['email'])
+        settings_page = home_page.header.click_settings_menu_item()
+        contact_identities_number = len(settings_page.profile.contact_identities)
+        settings_page.profile.add_github_identity(github_identity['username'], github_identity['password'], conftest.totp_passcode(github_identity['secret_seed']))
+        assert settings_page.header.success_alert == "Account successfully verified. You need to use this identity the next time you will login."
+        assert len(settings_page.profile.contact_identities) == contact_identities_number + 1
+        settings_page.header.logout()
+        home_page = Homepage(base_url, selenium)
+        home_page.login_with_email(passwordless_identity['email'])
+        assert "Please use one of the following authentication methods: Github Provider" in home_page.header.error_alert
+        home_page = Homepage(base_url, selenium)
+        home_page.login_with_github(github_identity['username'], github_identity['password'])
+        home_page.header.logout()
+        delete_github_identity_api = token['delete_github_identity_api']
+
+        #Cleanup
+        requests.delete(delete_github_identity_api, headers={'Authorization': 'Bearer {0}'.format(conftest.access_token(token))})

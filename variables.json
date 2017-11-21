@@ -7,6 +7,14 @@
   "passwordless": {
     "email": ""
     },
+  "passwordless_identity": {
+    "email": ""
+  },
+  "github_identity": {
+    "username": "",
+    "password": "",
+    "secret_seed": ""
+  },
   "counter_API_endpoint": "",
   "token": {
     "client_id": "",

@@ -4,6 +4,7 @@ from pages.auth0 import Auth0
 from pages.base import Base
 from pages.groups_page import GroupsPage
 from pages.page import PageRegion
+from pages.two_factor_authentication import TwoFactorAuthentication
 from tests import conftest
 
 
@@ -42,9 +43,10 @@ class Settings(Base):
         _full_name_input_locator = (By.ID, 'id_full_name')
         _primary_email_address = (By.CSS_SELECTOR, 'fieldset:nth-child(1) .email')
         _secondary_email_addresses = (By.CSS_SELECTOR, '#alternate-email .email')
-        _add_email_button_locator = (By.ID, 'nav-login')
+        _add_identity_button_locator = (By.ID, 'nav-login')
         _update_emails_locator = (By.ID, 'form-submit-email')
         _delete_button_locator = (By.CSS_SELECTOR, '#alternate-email .delete')
+        _contact_identities_locator = (By.CSS_SELECTOR, '.identity-profile')
 
         @property
         def primary_email(self):
@@ -61,6 +63,10 @@ class Settings(Base):
         @property
         def full_name(self):
             return self.selenium.find_element(*self._full_name_input_locator).get_attribute('value')
+
+        @property
+        def contact_identities(self):
+            return self.selenium.find_elements(*self._contact_identities_locator)
 
         def delete_secondary_email(self, email):
             delete_buttons = self.selenium.find_elements(*self._delete_button_locator)
@@ -82,12 +88,24 @@ class Settings(Base):
         def click_update_basic_information(self):
             self.selenium.find_element(*self._update_basic_information_locator).click()
 
-        def add_email(self, email):
-            self.selenium.find_element(*self._add_email_button_locator).click()
-            auth0 = Auth0(self.base_url, self.selenium)
+        def click_add_identity(self):
+            element = self.selenium.find_element(*self._add_identity_button_locator)
+            self.selenium.execute_script("arguments[0].scrollIntoView();", element)
+            self.selenium.find_element(*self._add_identity_button_locator).click()
+            return Auth0(self.base_url, self.selenium)
+
+        def add_email_identity(self, email):
+            auth0 = self.click_add_identity()
             auth0.request_login_link(email)
             login_link = conftest.login_link(email)
             self.selenium.get(login_link)
+            return self
+
+        def add_github_identity(self, username, password, passcode):
+            auth0 = self.click_add_identity()
+            auth0.login_with_github(username, password)
+            two_fa = TwoFactorAuthentication(self.base_url, self.selenium)
+            two_fa.enter_github_passcode(passcode)
             return self
 
         def click_update_emails(self):
