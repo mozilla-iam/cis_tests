@@ -49,6 +49,10 @@ class Page(object):
     def go_to_url(self, url):
         self.selenium.get(url)
 
+    @property
+    def current_url(self):
+        return self.selenium.current_url()
+
 
 class PageRegion(Page):
 

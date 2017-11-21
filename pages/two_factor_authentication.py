@@ -8,6 +8,8 @@ class TwoFactorAuthentication(Page):
     _enter_passcode_button = (By.CSS_SELECTOR, '.passcode-label .positive.auth-button')
     _passcode_field_locator = (By.CSS_SELECTOR, '.passcode-label input[name="passcode"]')
     _error_message_locator = (By.CSS_SELECTOR, '.message.error')
+    _github_passcode_field_locator = (By.CSS_SELECTOR, 'input[id="otp"]')
+    _github_enter_passcode_button_locator = (By.CSS_SELECTOR, '.btn-primary')
 
     @property
     def is_error_message_displayed(self):
@@ -27,3 +29,7 @@ class TwoFactorAuthentication(Page):
         self.selenium.find_element(*self._passcode_field_locator).send_keys(passcode)
         self.selenium.find_element(*self._enter_passcode_button).click()
         self.selenium.switch_to_default_content()
+
+    def enter_github_passcode(self, passcode):
+        self.selenium.find_element(*self._github_passcode_field_locator).send_keys(passcode)
+        self.selenium.find_element(*self._github_enter_passcode_button_locator).click()
