@@ -3,7 +3,7 @@
 /** Desired capabilities */
 def capabilities = [
   browserName: 'Firefox',
-  version: '54.0',
+  version: '58.0',
   platform: 'Windows 10'
 ]
 
@@ -16,7 +16,6 @@ pipeline {
   environment {
     VARIABLES = credentials('CIS_TESTS_VARIABLES')
     PYTEST_ADDOPTS =
-      "-n=auto " +
       "--tb=short " +
       "--driver=SauceLabs " +
       "--variables=capabilities.json " +
