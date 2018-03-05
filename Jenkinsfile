@@ -1,3 +1,5 @@
+@Library('fxtest@1.6')
+
 /** Desired capabilities */
 def capabilities = [
   browserName: 'Firefox',
