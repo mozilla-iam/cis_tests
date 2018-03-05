@@ -31,7 +31,7 @@ pipeline {
     stage('Test') {
       steps {
         writeCapabilities(capabilities, 'capabilities.json')
-        sh "tox -e py36"
+        sh "tox -e py35"
       }
       post {
         always {
@@ -42,7 +42,7 @@ pipeline {
             alwaysLinkToLastBuild: true,
             keepAll: true,
             reportDir: 'results',
-            reportFiles: "py36.html",
+            reportFiles: "py35.html",
             reportName: 'HTML Report'])
         }
       }
