@@ -1,5 +1,3 @@
-@Library('fxtest@1.6') _
-
 /** Desired capabilities */
 def capabilities = [
   browserName: 'Firefox',
@@ -31,7 +29,7 @@ pipeline {
     stage('Test') {
       steps {
         writeCapabilities(capabilities, 'capabilities.json')
-        sh "tox -e py27"
+        sh "tox -e py35"
       }
       post {
         always {
@@ -42,7 +40,7 @@ pipeline {
             alwaysLinkToLastBuild: true,
             keepAll: true,
             reportDir: 'results',
-            reportFiles: "py27.html",
+            reportFiles: "py35.html",
             reportName: 'HTML Report'])
         }
       }
