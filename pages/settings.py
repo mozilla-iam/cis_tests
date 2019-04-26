@@ -41,7 +41,7 @@ class Settings(Base):
         _update_basic_information_locator = (By.ID, 'form-submit-basic')
         _full_name_input_locator = (By.ID, 'id_full_name')
         _primary_email_address = (By.CSS_SELECTOR, 'fieldset:nth-child(1) .email')
-        _secondary_email_addresses = (By.CSS_SELECTOR, '#alternate-email .email')
+        _secondary_email_addresses = (By.CSS_SELECTOR, '.identity-profile')
         _add_email_button_locator = (By.ID, 'nav-login')
         _update_emails_locator = (By.ID, 'form-submit-email')
         _delete_button_locator = (By.CSS_SELECTOR, '#alternate-email .delete')
@@ -52,7 +52,7 @@ class Settings(Base):
 
         @property
         def secondary_email_address(self):
-            return [item.text for item in self.selenium.find_elements(*self._secondary_email_addresses)]
+            return [item.text.split(" - ")[1] for item in self.selenium.find_elements(*self._secondary_email_addresses)]
 
         @property
         def username(self):
